@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { LayoutDashboard, List, Settings, LogOut } from "lucide-react";
+import Link from "next/link"; // Import Link component
 
 type SidebarProps = {
   user: {
@@ -49,24 +50,24 @@ export default function Sidebar({ user }: SidebarProps) {
           </div>
         </div>
         <nav className="space-y-3">
-          <a
+          <Link
             href="/dashboard"
             className="flex items-center gap-2 py-2 px-4 rounded hover:bg-blue-100 text-blue-600 font-medium"
           >
             <LayoutDashboard className="w-5 h-5" /> Dashboard
-          </a>
-          <a
+          </Link>
+          <Link
             href="/dashboard/links"
             className="flex items-center gap-2 py-2 px-4 rounded hover:bg-gray-100"
           >
             <List className="w-5 h-5" /> My Links
-          </a>
-          <a
+          </Link>
+          <Link
             href="/dashboard/settings"
             className="flex items-center gap-2 py-2 px-4 rounded hover:bg-gray-100"
           >
             <Settings className="w-5 h-5" /> Settings
-          </a>
+          </Link>
           <a
             onClick={handleLogout}
             className="flex items-center gap-2 py-2 px-4 rounded hover:bg-gray-100 text-red-500"

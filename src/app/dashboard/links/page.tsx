@@ -12,9 +12,16 @@ type Link = {
   createdAt: string;
 };
 
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  // Add other fields your user object has
+};
+
 export default function LinksPage() {
   const [links, setLinks] = useState<Link[]>([]);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null); // ✅ Replace `any` with proper type
 
   useEffect(() => {
     const fetchLinks = async () => {
@@ -26,8 +33,8 @@ export default function LinksPage() {
         const res = await fetch("/api/links");
         const data = await res.json();
         setLinks(data.links || []);
-      } catch (err) {
-        toast.error("Failed to load links");
+      } catch {
+        toast.error("Failed to load links"); // ✅ Removed unused `err`
       }
     };
 

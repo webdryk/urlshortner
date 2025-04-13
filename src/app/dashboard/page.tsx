@@ -5,21 +5,36 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { toast } from "react-toastify";
 
-export default function Dashboard() {
-  const [urlInput, setUrlInput] = useState("");
-  const [links, setLinks] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState<any>(null); // New state for user data
+// Define types for Link and User
+type Link = {
+  _id: string;
+  originalUrl: string;
+  shortUrl: string;
+  clicks: number;
+};
 
-  // ✅ Fetch user links on mount
+type User = {
+  _id: string;
+  name: string;
+  email: string;
+  // Add more fields as needed
+};
+
+export default function Dashboard() {
+  const [urlInput, setUrlInput] = useState<string>("");
+  const [links, setLinks] = useState<Link[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null); // Updated state with correct type
+
+  // ✅ Fetch user and links data on mount
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const res = await fetch("/api/user"); // Assuming an API route exists for user data
         const data = await res.json();
-        console.log(data); 
+        console.log(data);
         setUser(data.user); // Set the user data
-      } catch (err) {
+      } catch (_err) {
         toast.error("Failed to load user data");
       }
     };
@@ -29,10 +44,11 @@ export default function Dashboard() {
         const res = await fetch("/api/links");
         const data = await res.json();
         setLinks(data.links);
-      } catch (err) {
+      } catch (_err) {
         toast.error("Failed to load links");
       }
     };
+
     fetchUser();
     fetchLinks();
   }, []);
@@ -56,7 +72,7 @@ export default function Dashboard() {
       toast.success("Shortened successfully");
       setLinks([data.link, ...links]); // prepend new link
       setUrlInput("");
-    } catch (err) {
+    } catch (_err) {
       toast.error("Something went wrong");
     } finally {
       setLoading(false);

@@ -5,10 +5,18 @@ import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import { toast } from "react-toastify";
 
+// Define a type for the user object
+type User = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  // Add other user properties as needed
+};
+
 export default function Settings() {
-  const [user, setUser] = useState<any>(null);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [user, setUser] = useState<User | null>(null); // Updated state with correct type
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -18,7 +26,7 @@ export default function Settings() {
         setUser(data.user);
         setFirstName(data.user.firstName);
         setLastName(data.user.lastName);
-      } catch (err) {
+      } catch {
         toast.error("Failed to load user data");
       }
     };
@@ -39,7 +47,7 @@ export default function Settings() {
       if (!res.ok) return toast.error(data.message);
 
       toast.success("Profile updated");
-    } catch (err) {
+    } catch {
       toast.error("Update failed");
     }
   };
@@ -64,7 +72,7 @@ export default function Settings() {
       setTimeout(() => {
         window.location.href = "/";
       }, 1500);
-    } catch (err) {
+    } catch {
       toast.error("Failed to delete account");
     }
   };

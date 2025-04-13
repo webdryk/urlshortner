@@ -1,13 +1,18 @@
-// app/api/links/route.ts
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import Link from "@/lib/models/Link";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
+// Define the shape of your JWT payload
+interface JwtPayload {
+  id: string;
+  // add more fields here if needed
+}
+
 export async function GET() {
   try {
-    const cookieStore = await cookies();
+    const cookieStore = cookies(); // no need to await
     const token = cookieStore.get("token")?.value;
 
     if (!token) {
@@ -18,9 +23,9 @@ export async function GET() {
 
     let userId = "";
     try {
-      const decoded: any = jwt.verify(token, JWT_SECRET);
+      const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
       userId = decoded.id;
-    } catch (err) {
+    } catch {
       return NextResponse.json({ message: "Invalid token" }, { status: 401 });
     }
 
@@ -29,9 +34,11 @@ export async function GET() {
     const links = await Link.find({ userId }).sort({ createdAt: -1 });
 
     return NextResponse.json({ links });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : "Unknown error";
+
     return NextResponse.json(
-      { message: "Failed to fetch links", error: err.message },
+      { message: "Failed to fetch links", error: errorMessage },
       { status: 500 }
     );
   }

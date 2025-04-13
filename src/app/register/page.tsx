@@ -1,4 +1,5 @@
 import AuthForm from "@/components/AuthForm";
+import Link from "next/link"; // Import the Link component
 
 export default function RegisterPage() {
   return (
@@ -8,9 +9,9 @@ export default function RegisterPage() {
         <AuthForm type="register" />
         <p className="mt-4 text-sm text-center">
           Already have an account?{" "}
-          <a href="/login" className="text-blue-600 hover:underline">
-            Log In
-          </a>
+          <Link href="/login">
+            <a className="text-blue-600 hover:underline">Log In</a>
+          </Link>
         </p>
       </div>
     </div>

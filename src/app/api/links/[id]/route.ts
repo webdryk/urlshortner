@@ -1,19 +1,23 @@
-// src/app/api/links/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import Link from "@/lib/models/Link";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
+// Define the expected shape of your JWT payload
+interface JwtPayload {
+  id: string;
+  // add any other properties your JWT might contain
+}
+
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } } // ✅ THIS is correct
-  
+  { params }: { params: { id: string } }
 ) {
   try {
-    const {id} = params;
+    const { id } = params;
 
-    const cookieStore = await cookies(); // ✅ no need to await
+    const cookieStore = cookies();
     const token = cookieStore.get("token")?.value;
 
     if (!token) {
@@ -21,7 +25,7 @@ export async function DELETE(
     }
 
     const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
-    const decoded: any = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
     const userId = decoded.id;
 
     await dbConnect();
@@ -36,9 +40,11 @@ export async function DELETE(
     }
 
     return NextResponse.json({ message: "Link deleted" });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : "Delete failed";
+
     return NextResponse.json(
-      { message: "Delete failed", error: err.message },
+      { message: "Delete failed", error: errorMessage },
       { status: 500 }
     );
   }
