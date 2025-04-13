@@ -5,7 +5,6 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { toast } from "react-toastify";
 
-// Define types for Link and User
 type Link = {
   _id: string;
   originalUrl: string;
@@ -17,24 +16,22 @@ type User = {
   _id: string;
   name: string;
   email: string;
-  // Add more fields as needed
 };
 
 export default function Dashboard() {
   const [urlInput, setUrlInput] = useState<string>("");
   const [links, setLinks] = useState<Link[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [user, setUser] = useState<User | null>(null); // Updated state with correct type
+  const [user, setUser] = useState<User | null>(null);
 
-  // ✅ Fetch user and links data on mount
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch("/api/user"); // Assuming an API route exists for user data
+        const res = await fetch("/api/user");
         const data = await res.json();
         console.log(data);
-        setUser(data.user); // Set the user data
-      } catch (_err) {
+        setUser(data.user);
+      } catch {
         toast.error("Failed to load user data");
       }
     };
@@ -44,7 +41,7 @@ export default function Dashboard() {
         const res = await fetch("/api/links");
         const data = await res.json();
         setLinks(data.links);
-      } catch (_err) {
+      } catch {
         toast.error("Failed to load links");
       }
     };
@@ -53,7 +50,6 @@ export default function Dashboard() {
     fetchLinks();
   }, []);
 
-  // ✅ Handle URL shortening
   const handleShorten = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!urlInput) return;
@@ -70,16 +66,15 @@ export default function Dashboard() {
       if (!res.ok) return toast.error(data.message);
 
       toast.success("Shortened successfully");
-      setLinks([data.link, ...links]); // prepend new link
+      setLinks([data.link, ...links]);
       setUrlInput("");
-    } catch (_err) {
+    } catch {
       toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Handle copy
   const handleCopy = async (shortUrl: string) => {
     try {
       await navigator.clipboard.writeText(shortUrl);
@@ -89,7 +84,6 @@ export default function Dashboard() {
     }
   };
 
-  // ✅ Handle delete
   const handleDelete = async (id: string) => {
     try {
       const res = await fetch(`/api/links/${id}`, { method: "DELETE" });
@@ -108,7 +102,7 @@ export default function Dashboard() {
     <>
       <Navbar />
       <div className="pt-16 md:flex">
-        <Sidebar user={user} /> {/* Pass user data to Sidebar */}
+        <Sidebar user={user} />
         <main className="flex-1 p-4 pt-5 md:ml-64 h-[calc(100vh-64px)] overflow-hidden">
           <section className="bg-white p-6 rounded-lg shadow mb-6">
             <h2 className="text-2xl font-bold mb-4">Shorten a New URL</h2>
