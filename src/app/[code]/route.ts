@@ -1,11 +1,14 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import Link from "@/lib/models/Link";
 
-export async function GET(
-  request: Request,
-  { params }: { params: { code: string } }
-) {
+type Params = {
+  params: {
+    code: string;
+  };
+};
+
+export async function GET(request: NextRequest, { params }: Params) {
   try {
     await dbConnect();
     const { code } = params;
@@ -23,7 +26,6 @@ export async function GET(
 
     return NextResponse.redirect(link.originalUrl);
   } catch (err: unknown) {
-    // Safely extract error message
     const errorMessage =
       err instanceof Error ? err.message : "Redirection failed";
 
