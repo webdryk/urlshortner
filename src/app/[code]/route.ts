@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import Link from "@/lib/models/Link";
 
+// ✅ This is the correct type for App Router dynamic route context
 export async function GET(
   request: NextRequest,
-  // @ts-expect-error - suppress type error for route context (Next.js App Router)
   context: { params: { code: string } }
 ) {
   try {
