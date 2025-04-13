@@ -5,7 +5,7 @@ import Link from "@/lib/models/Link";
 export async function GET(
   request: NextRequest,
   { params }: { params: { code: string } }
-) {
+) { 
   try {
     await dbConnect();
     const { code } = params;
