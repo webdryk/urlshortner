@@ -1,3 +1,4 @@
+// @ts-ignore
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import Link from "@/lib/models/Link";
