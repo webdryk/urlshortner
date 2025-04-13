@@ -2,15 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import Link from "@/lib/models/Link";
 
-// Correct type for the second argument is:
-// { params: { [key: string]: string } }
 export async function GET(
   request: NextRequest,
-  context: { params: { code: string } }
+  { params }: { params: { code: string } }
 ) {
   try {
     await dbConnect();
-    const { code } = context.params;
+    const { code } = params;
 
     const link = await Link.findOne({ shortCode: code });
 
