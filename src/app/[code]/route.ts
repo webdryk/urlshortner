@@ -4,12 +4,12 @@ import Link from "@/lib/models/Link";
 
 export async function GET(
   request: Request,
-  context: { params: { code: string } }
+  { params }: { params: Record<string, string> }
 ) {
   try {
     await dbConnect();
 
-    const { code } = context.params;
+    const { code } = params;
 
     const link = await Link.findOne({ shortCode: code });
 
