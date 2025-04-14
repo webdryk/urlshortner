@@ -19,7 +19,7 @@ const eslintConfig = [
   {
     rules: {
       // Disable the rule so @ts-ignore won't cause an error
-      "@typescript-eslint/ban-ts-comment": "off",
+      "@typescript-eslint/ban-ts-comment": "error",
     },
   },
 ];
