@@ -49,7 +49,7 @@ export default function AuthForm({ type }: Props) {
 
       router.push(type === "login" ? "/dashboard" : "/login");
     } catch (err) {
-      
+      console.error(err); // Log the error for debugging
       toast.error("Something went wrong");
     }
   };

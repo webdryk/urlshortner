@@ -29,7 +29,7 @@ export async function GET() {
 
     return NextResponse.json({ user });
   } catch (error) {
-   
+    console.error("Token verification error:", error);
     return NextResponse.json({ message: "Invalid token" }, { status: 401 });
   }
 }
@@ -65,7 +65,7 @@ export async function PUT(req: Request) {
 
     return NextResponse.json({ message: "Profile updated", user });
   } catch (error) {
-  
+    console.error("Update error:", error);
     return NextResponse.json({ message: "Failed to update profile" }, { status: 500 });
   }
 }
@@ -95,7 +95,7 @@ export async function DELETE() {
 
     return response;
   } catch (error) {
-    
+    console.error("Delete error:", error);
     return NextResponse.json({ message: "Failed to delete account" }, { status: 500 });
   }
 }
