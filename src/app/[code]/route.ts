@@ -2,32 +2,48 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import Link from "@/lib/models/Link";
 
+interface RouteParams {
+  params: {
+    code: string;
+  };
+}
+
 export async function GET(
   request: NextRequest,
-  context: { params: { code: string } }
+  { params }: RouteParams // Cleaner destructuring
 ) {
   try {
     await dbConnect();
-    const { code } = context.params;
+    const { code } = params; // Directly from params
 
     const link = await Link.findOne({ shortCode: code });
 
     if (!link) {
-      return NextResponse.json({ message: "Link not found" }, { status: 404 });
+      return NextResponse.json(
+        { success: false, message: "Link not found" },
+        { status: 404 }
+      );
     }
 
-    // Increment click count and update click history
+    // Update analytics
     link.clicks += 1;
-    link.clickHistory.push(new Date());
+    link.clickHistory.push({
+      timestamp: new Date(),
+      userAgent: request.headers.get("user-agent") || "unknown",
+      ip: request.ip || "unknown",
+    });
     await link.save();
 
     return NextResponse.redirect(link.originalUrl);
   } catch (err: unknown) {
-    const errorMessage =
-      err instanceof Error ? err.message : "Redirection failed";
+    console.error("Redirect failed:", err);
 
     return NextResponse.json(
-      { message: "Redirection failed", error: errorMessage },
+      {
+        success: false,
+        message: "Redirection failed",
+        error: err instanceof Error ? err.message : "Unknown error",
+      },
       { status: 500 }
     );
   }
