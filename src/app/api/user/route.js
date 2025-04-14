@@ -1,3 +1,4 @@
+// app/api/user/route.js
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
@@ -6,6 +7,7 @@ import User from "@/lib/models/User";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 
+// GET user profile
 export async function GET() {
   const cookieStore = cookies();
   const token = cookieStore.get("token")?.value;
@@ -15,10 +17,7 @@ export async function GET() {
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as {
-      id: string;
-      email: string;
-    };
+    const decoded = jwt.verify(token, JWT_SECRET);
 
     await connectDB();
     const user = await User.findById(decoded.id).lean();
@@ -34,9 +33,8 @@ export async function GET() {
   }
 }
 
-
 // PUT user profile update
-export async function PUT(req: Request) {
+export async function PUT(req) {
   const cookieStore = cookies();
   const token = cookieStore.get("token")?.value;
 
@@ -45,11 +43,14 @@ export async function PUT(req: Request) {
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
+    const decoded = jwt.verify(token, JWT_SECRET);
     const { firstName, lastName } = await req.json();
 
     if (!firstName || !lastName) {
-      return NextResponse.json({ message: "Both first and last names are required" }, { status: 400 });
+      return NextResponse.json(
+        { message: "Both first and last names are required" },
+        { status: 400 }
+      );
     }
 
     await connectDB();
@@ -66,7 +67,10 @@ export async function PUT(req: Request) {
     return NextResponse.json({ message: "Profile updated", user });
   } catch (error) {
     console.error("Update error:", error);
-    return NextResponse.json({ message: "Failed to update profile" }, { status: 500 });
+    return NextResponse.json(
+      { message: "Failed to update profile" },
+      { status: 500 }
+    );
   }
 }
 
@@ -80,7 +84,7 @@ export async function DELETE() {
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
+    const decoded = jwt.verify(token, JWT_SECRET);
 
     await connectDB();
     const deletedUser = await User.findByIdAndDelete(decoded.id);
@@ -89,13 +93,16 @@ export async function DELETE() {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    // Optionally clear the cookie
+    // Clear the cookie
     const response = NextResponse.json({ message: "Account deleted" });
     response.cookies.set("token", "", { maxAge: 0 });
 
     return response;
   } catch (error) {
     console.error("Delete error:", error);
-    return NextResponse.json({ message: "Failed to delete account" }, { status: 500 });
+    return NextResponse.json(
+      { message: "Failed to delete account" },
+      { status: 500 }
+    );
   }
 }
