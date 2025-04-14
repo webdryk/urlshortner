@@ -1,16 +1,14 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import Link from "@/lib/models/Link";
 
-
-
 export async function GET(
-  request: NextRequest,
+  _: Request, // or remove if truly unused
   { params }: { params: { code: string } }
 ) {
   try {
     await dbConnect();
-    const { code } = context.params;
+    const { code } = params;
 
     const link = await Link.findOne({ shortCode: code });
 
