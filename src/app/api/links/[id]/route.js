@@ -1,19 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+// app/api/links/[id]/route.js
+import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import Link from "@/lib/models/Link";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
-// Define the expected shape of your JWT payload
-interface JwtPayload {
-  id: string;
-  // add any other properties your JWT might contain
-}
-
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request, { params }) {
   try {
     const { id } = params;
 
@@ -25,7 +17,7 @@ export async function DELETE(
     }
 
     const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
-    const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
+    const decoded = jwt.verify(token, JWT_SECRET);
     const userId = decoded.id;
 
     await dbConnect();
@@ -40,7 +32,7 @@ export async function DELETE(
     }
 
     return NextResponse.json({ message: "Link deleted" });
-  } catch (err: unknown) {
+  } catch (err) {
     const errorMessage = err instanceof Error ? err.message : "Delete failed";
 
     return NextResponse.json(
