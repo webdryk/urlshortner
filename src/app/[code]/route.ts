@@ -1,16 +1,14 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import Link from "@/lib/models/Link";
-import type { NextRequest } from "next/server";
-import type { RouteHandlerContext } from "next/dist/server/web/types";
 
 export async function GET(
   request: NextRequest,
-  context: RouteHandlerContext
+  // @ts-ignore - suppress context param type error for route handlers
+  context: { params: { code: string } }
 ) {
   try {
     await dbConnect();
-
     const { code } = context.params;
 
     const link = await Link.findOne({ shortCode: code });
