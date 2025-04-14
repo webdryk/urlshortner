@@ -2,9 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import Link from "@/lib/models/Link";
 
+
+
 export async function GET(
   request: NextRequest,
-  context: { params: { code: string } }
+  { params }: { params: { code: string } }
 ) {
   try {
     await dbConnect();
