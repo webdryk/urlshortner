@@ -2,14 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import Link from "@/lib/models/Link";
 
-// Define context type based on App Router dynamic routes
-type Context = {
+interface RouteContext {
   params: {
     code: string;
   };
-};
+}
 
-export async function GET(request: NextRequest, context: Context) {
+export async function GET(request: NextRequest, context: RouteContext) {
   try {
     await dbConnect();
     const { code } = context.params;
