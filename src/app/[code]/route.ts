@@ -4,7 +4,6 @@ import Link from "@/lib/models/Link";
 
 export async function GET(
   request: NextRequest,
-  // @ts-ignore - suppress context param type error for route handlers
   context: { params: { code: string } }
 ) {
   try {
