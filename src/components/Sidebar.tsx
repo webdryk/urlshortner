@@ -26,7 +26,7 @@ export default function Sidebar({ user }: SidebarProps) {
       await fetch("/api/logout", { method: "GET" });
       router.push("/login");
     } catch (err) {
-      console.error("Logout failed:", err);
+      
     }
   };
 
