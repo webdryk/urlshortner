@@ -18,8 +18,13 @@ const eslintConfig = [
   // Override rules
   {
     rules: {
-      // Disable the rule so @ts-ignore won't cause an error
-      "@typescript-eslint/ban-ts-comment": "error",
+      "@typescript-eslint/ban-ts-comment": [
+        "error",
+        {
+          "ts-ignore": false, // allow @ts-ignore
+          "ts-expect-error": true,
+        },
+      ],
     },
   },
 ];
