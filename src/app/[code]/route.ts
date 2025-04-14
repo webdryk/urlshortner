@@ -3,12 +3,13 @@ import dbConnect from "@/lib/db";
 import Link from "@/lib/models/Link";
 
 export async function GET(
-  _: Request, // or remove if truly unused
-  { params }: { params: { code: string } }
+  request: Request,
+  context: { params: { code: string } }
 ) {
   try {
     await dbConnect();
-    const { code } = params;
+
+    const { code } = context.params;
 
     const link = await Link.findOne({ shortCode: code });
 
