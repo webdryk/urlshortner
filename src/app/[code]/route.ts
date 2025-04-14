@@ -2,13 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import Link from "@/lib/models/Link";
 
-interface RouteContext {
-  params: {
-    code: string;
-  };
-}
-
-export async function GET(request: NextRequest, context: RouteContext) {
+export async function GET(
+  request: NextRequest,
+  context: { params: { code: string } }
+) {
   try {
     await dbConnect();
     const { code } = context.params;
