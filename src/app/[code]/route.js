@@ -19,8 +19,12 @@ export async function GET(request, { params }) {
 
     return NextResponse.redirect(link.originalUrl);
   } catch (error) {
+    console.error("Redirect failed:", error); // Log the error
     return NextResponse.json(
-      { error: "Internal server error" },
+      {
+        error: "Internal server error",
+        message: error.message, // Include the error message
+      },
       { status: 500 }
     );
   }
